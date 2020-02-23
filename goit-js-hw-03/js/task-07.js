@@ -1,3 +1,8 @@
+'use strict';
+/*Задание 7 - дополнительное, выполнять не обязательно
+Напиши скрипт управления личным кабинетом интернет банка. 
+Есть объект account в котором необходимо реализовать методы для работы с балансом и историей транзакций.*/
+
 /*
  * Типов транзацкий всего два.
  * Можно положить либо снять деньги со счета.
@@ -23,20 +28,13 @@ const account = {
    * Принимает сумму и тип транзакции.
    */
   createTransaction(amount, type) {
-    const generateId = function() {
-      return (
-        '_' +
-        Math.random()
-          .toString(36)
-          .substr(2, 9)
-      );
+    const transactions = {
+      id: Date.now(),
+      // id: this.transactions.length + 1, this case for checking method getTransactionDetails
+      type,
+      amount,
     };
-    objTransaction = {
-      id: generateId(),
-      type: type,
-      amount: amount,
-    };
-    this.transactions.push(objTransaction);
+    return transactions;
   },
 
   /*
@@ -46,8 +44,12 @@ const account = {
    * после чего добавляет его в историю транзакций
    */
   deposit(amount) {
-    this.createTransaction(amount, Transaction.DEPOSIT);
     this.balance += amount;
+    this.transactions = [
+      ...this.transactions,
+      this.createTransaction(amount, 'deposit'),
+    ];
+    // this.transactions.push(this.createTransaction(amount, 'deposit'));
   },
 
   /*
@@ -61,10 +63,10 @@ const account = {
    */
   withdraw(amount) {
     if (this.balance < amount) {
-      console.log('Cнятие такой суммы не возможно, недостаточно средств.');
+      console.log('Cнятие такой суммы не возможно, недостаточно средств!');
     } else {
-      this.createTransaction(amount, Transaction.WITHDRAW);
       this.balance -= amount;
+      this.transactions.push(this.createTransaction(amount, 'withdraw'));
     }
   },
 
@@ -79,12 +81,16 @@ const account = {
    * Метод ищет и возвращает объект транзации по id
    */
   getTransactionDetails(id) {
+    let searchTransactionObj = 0;
     for (const obj of this.transactions) {
-      if (obj.id === id) {
-        return obj;
+      if (obj['id'] === id) {
+        searchTransactionObj = obj;
       }
     }
-    return 'Такой транзакции в истории нету!';
+    if (searchTransactionObj !== 0) {
+      return searchTransactionObj;
+    }
+    return 'Wrong id, please try again.';
   },
 
   /*
@@ -92,36 +98,30 @@ const account = {
    * определенного типа транзакции из всей истории транзакций
    */
   getTransactionTotal(type) {
-    let result = 0;
-    for (const objTransaction of this.transactions) {
-      if (objTransaction.type === type) {
-        result += objTransaction.amount;
+    let totalAmount = 0;
+    for (const obj of this.transactions) {
+      if (obj['type'] === type) {
+        totalAmount += obj['amount'];
       }
     }
-    return result;
+    return totalAmount;
   },
 };
 
-account.deposit(10000);
+account.deposit(100);
+account.deposit(1000);
 account.withdraw(300);
+account.deposit(500);
+account.deposit(400);
 account.withdraw(350);
+account.deposit(5000);
 account.withdraw(100);
 account.deposit(300);
 account.withdraw(3000);
 
 console.log(account.getBalance());
-console.log(account.getTransactionDetails('_413digdzp'));
-
+console.log(account.getTransactionDetails(1579808189144));
 console.log(account.getTransactionTotal(Transaction.DEPOSIT));
 console.log(account.getTransactionTotal(Transaction.WITHDRAW));
 
 console.log(account.transactions);
-
-account.withdraw(15000);
-account.withdraw(350);
-console.log(account.getBalance());
-console.log(account.getTransactionTotal(Transaction.DEPOSIT));
-console.log(account.getTransactionTotal(Transaction.WITHDRAW));
-console.log(account.transactions);
-account.deposit(10000);
-console.log(account.getBalance());
