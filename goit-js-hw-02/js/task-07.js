@@ -36,7 +36,7 @@ const isLoginUnique = function(allLogins, login) {
 
 const addLogin = function(allLogins, login) {
   if (isLoginValid(login)) {
-    if (isLoginUnique(allLogins, login) === true) {
+    if (isLoginUnique(allLogins, login)) {
       allLogins.push(login);
       return 'Логин успешно добавлен!';
     }
