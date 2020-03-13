@@ -41,3 +41,7 @@ button {
 #validation-input.invalid {
   border-color: #f44336;
 }
+#font-size-control {
+  display: flex;
+  margin-top: 30px;
+}
