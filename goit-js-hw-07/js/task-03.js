@@ -24,9 +24,15 @@ const images = [
 ];
 
 const galleryById = document.querySelector('#gallery');
-images.forEach(obj => {
-  galleryById.insertAdjacentHTML(
-    'beforeend',
-    `<li class = "gallery__item"><img class = "gallery__item-image" src = "${obj.url}" alt = "${obj.alt}"/></li>`,
-  );
-});
+const createGalleryItem = image => {
+  const item = document.createElement('li');
+  const img = document.createElement('img');
+  img.setAttribute('src', image.url);
+  img.setAttribute('alt', image.alt);
+  item.classList.add('gallery__item');
+  img.classList.add('gallery__item-image');
+  item.appendChild(img);
+  return item;
+};
+const items = images.map(image => createGalleryItem(image));
+galleryById.append(...items);

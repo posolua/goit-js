@@ -10,8 +10,9 @@ const ingredients = [
   'Зелень',
   'Приправы',
 ];
-ingredients.forEach(el => {
+const items = ingredients.map(el => {
   const item = document.createElement('li');
   item.textContent = el;
-  document.querySelector('#ingredients').appendChild(item);
+  return item;
 });
+const ingredientsRef = document.querySelector('#ingredients').append(...items);
